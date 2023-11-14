@@ -6,16 +6,19 @@ import "./Automate/AutomateTaskCreator.sol";
 contract Staking is AutomateTaskCreator {
 
     uint256 public lastExecuted;
-    bytes32 public taskId;
-    uint256 public constant INTERVAL = 2 minutes;
+    uint256 public constant INTERVAL = 2 minutes; //change interval as per your need
 
     struct Staker {
         uint256 amount;
         uint256 timestamp;
         bool isLocked;
     }
-
+    struct StakerTaskId{
+        bytes32 taskId;
+        address stakerAddress;
+    }
     mapping(address => Staker) public stakes;
+    mapping(address => StakerTaskId) public stakerTaskId;
 
     event Stake(address indexed owner, uint256 amount, uint256 time);
     event UnStake(address indexed owner, uint256 amount, uint256 time, uint256 rewardTokens);
@@ -43,7 +46,7 @@ contract Staking is AutomateTaskCreator {
 
         bytes32 id = _createTask(address(this), execData, moduleData, ETH);
 
-        taskId = id;
+        stakerTaskId[_stackOwner] = StakerTaskId(id, _stackOwner);
     }
 
     function createTaskWithdraw(address _stackOwner) external {
@@ -66,8 +69,7 @@ contract Staking is AutomateTaskCreator {
             moduleData,
             ETH
         );
-
-        taskId = id;
+        stakerTaskId[_stackOwner] = StakerTaskId(id, _stackOwner);
     }
 
 
@@ -84,7 +86,8 @@ contract Staking is AutomateTaskCreator {
         uint256 balance = address(this).balance;
         require(balance >= amount, "Not enough balance");
         stakes[_stackOwner].isLocked = false;
-
+        bytes32 taskId = stakerTaskId[_stackOwner].taskId;
+        _cancelTask(taskId);
     }
 
     // Function to withdraw any remaining Ether in the contract (only callable by the owner)
