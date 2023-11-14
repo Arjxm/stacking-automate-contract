@@ -6,6 +6,8 @@ Change your rpc in hardhat.config.js
 ```
 ```
 update your .env file
+
+ cp .env.example .env
 ```
 ```bash
 npx hardhat compile
