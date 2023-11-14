@@ -15,5 +15,5 @@ npx hardhat compile
 ### For deploy and verify the contract
 
 ```bash
-npx hardhat run scripts/deploy.js --network buildbear
+npx hardhat run scripts/deploy.ts --network buildbear
 ```
