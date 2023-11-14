@@ -8,7 +8,6 @@ const config: HardhatUserConfig = {
   networks: {
     buildbear: {
       url: "https://rpc.dev.buildbear.io/quintessential-lobot-0cb74d7f",
-        accounts:["ff4d6c60791adac54699794ef030b6d2cb5884a72064cedd7f6a8ef55cc602f8"]
 }
   },etherscan: {
     apiKey: {
